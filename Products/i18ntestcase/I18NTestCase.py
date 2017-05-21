@@ -7,7 +7,7 @@ import unittest
 from glob import glob
 import os, re, sys
 import os.path
-import htmlentitydefs
+import html.entities
 
 def getFileFromPath(path):
     return path.split(os.sep)[-1]
@@ -64,7 +64,7 @@ class I18NTestCase(unittest.TestCase):
     '''Base test case for i18n testing'''
 
     # html entities as they appear in templates
-    ENTITIES = ['&'+ent+';' for ent in htmlentitydefs.entitydefs
+    ENTITIES = ['&'+ent+';' for ent in html.entities.entitydefs
                 if ent not in ['hellip', 'mdash', 'reg',
                                'laquo', 'raquo', 'lt', 'gt']]
 
@@ -95,8 +95,8 @@ class I18NTestCase(unittest.TestCase):
 
     def isMessageVariablesMissing(self, msgstr, default_vars=[]):
         # all ${foo}'s from the default should be present in the translation
-        default_vars = [unicode(var) for var in default_vars]
-        msg_vars = [unicode(var) for var in self._interp_regex.findall(msgstr)]
+        default_vars = [str(var) for var in default_vars]
+        msg_vars = [str(var) for var in self._interp_regex.findall(msgstr)]
         missing = [var for var in default_vars if var not in msg_vars]
         if missing:
             return (True, 'Warning: Missing message attributes %s' % missing)
